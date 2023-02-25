@@ -12,21 +12,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransactionServiceHelper {
+class TransactionServiceHelper {
 
     private static String BASE_URL = ConfigManager.getInstance().getPropertyString("baseUrl");
     private static String PORT = ConfigManager.getInstance().getPropertyString("port");
     //private static String USER = ConfigManager.getInstance().getPropertyString("user");
     //private static String PASSWORD = ConfigManager.getInstance().getPropertyString("password");
 
-    public TransactionServiceHelper(){
+    TransactionServiceHelper(){
         RestAssured.baseURI = BASE_URL;
         RestAssured.port = Integer.parseInt(PORT);
         //RestAssured.basic(USER, PASSWORD);
         RestAssured.useRelaxedHTTPSValidation();
     }
 
-    protected Response createSaleTransaction(SaleTransaction values, String user, String password){
+     Response createSaleTransaction(SaleTransaction values, String user, String password){
         RestAssured.basic(user, password);
         SaleTransaction saleTransaction = new SaleTransaction();
 
@@ -50,7 +50,7 @@ public class TransactionServiceHelper {
         return response;
     }
 
-    protected Response createVoidTransaction(String referenceId){
+    Response createVoidTransaction(String referenceId){
         //create post request
         VoidTransaction voidTransaction = new VoidTransaction();
 
