@@ -30,7 +30,7 @@ public class ConfigManager {
         }
     }
 
-    public static ConfigManager getInstance() throws IOException {
+    public static ConfigManager getInstance() {
         if(manager == null) {
             synchronized (ConfigManager.class) {
                 manager = new ConfigManager();
