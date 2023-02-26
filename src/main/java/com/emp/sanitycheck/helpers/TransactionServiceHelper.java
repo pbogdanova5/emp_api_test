@@ -5,12 +5,10 @@ import com.emp.sanitycheck.models.SaleTransaction;
 import com.emp.sanitycheck.models.VoidTransaction;
 import com.emp.sanitycheck.utils.ConfigManager;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import static io.restassured.config.EncoderConfig.encoderConfig;
 
 class TransactionServiceHelper {
 
@@ -24,10 +22,11 @@ class TransactionServiceHelper {
         RestAssured.port = Integer.parseInt(PORT);
         //RestAssured.basic(USER, PASSWORD);
         RestAssured.useRelaxedHTTPSValidation();
+        RestAssured.config = RestAssured.config().encoderConfig(encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
     }
 
      Response createSaleTransaction(SaleTransaction values, String user, String password){
-        RestAssured.basic(user, password);
+
         SaleTransaction saleTransaction = new SaleTransaction();
 
         saleTransaction.setTransactionType(values.getTransactionType());
@@ -39,18 +38,19 @@ class TransactionServiceHelper {
         saleTransaction.setCardHolder(values.getCardHolder());
         saleTransaction.setEmail(values.getEmail());
         saleTransaction.setAddress(values.getAddress());
-
-        Response response = RestAssured.given()
+String f = formatJsonObject(saleTransaction);
+        Response response = RestAssured.given().log().all()
+                .auth().basic(user, password)
                 .contentType("application/json; charset=UTF-8")
                 .when()
-                .body(saleTransaction)
+                .body(formatJsonObject(saleTransaction))
                 .post(EndPoints.SALE_TRANSACTION)
                 .andReturn();
 
         return response;
     }
 
-    Response createVoidTransaction(String referenceId){
+    Response createVoidTransaction(String referenceId, String userName, String password){
         //create post request
         VoidTransaction voidTransaction = new VoidTransaction();
 
@@ -58,7 +58,8 @@ class TransactionServiceHelper {
         voidTransaction.setTransactionType("void");
 
 
-        Response response = RestAssured.given()
+        Response response = RestAssured.given().log().all()
+                .auth().basic(userName, password)
                 .contentType("application/json; charset=UTF-8")
                 .when()
                 .body(voidTransaction)
@@ -68,4 +69,17 @@ class TransactionServiceHelper {
         return response;
     }
 
+    private String formatJsonObject(SaleTransaction st){
+        return "{\"payment_transaction\":" +
+                "{\"card_number\": \"" + st.getCardNumber() +"\", " +
+                "\"cvv\": \"" + st.getCvv() +"\", " +
+                "\"expiration_date\": \"" + st.getExpirationDate() +"\", " +
+                "\"amount\": \"" + st.getAmount() +"\", " +
+                "\"usage\": \"" + st.getUsage() +"\", " +
+                "\"transaction_type\": \"" + st.getTransactionType() +"\", " +
+                "\"card_holder\": \"" + st.getCardHolder() +"\", " +
+                "\"email\": \"" + st.getEmail() +"\", " +
+                "\"address\": \"" + st.getAddress() +"\"}}";
+
+    }
 }

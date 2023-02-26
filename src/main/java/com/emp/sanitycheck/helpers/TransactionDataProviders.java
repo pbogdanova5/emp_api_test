@@ -16,7 +16,7 @@ public class TransactionDataProviders {
         ArrayList<Object[]> listSaleTransaction = new ArrayList<Object[]>();
 
         SaleTransaction[] arraySaleTransaction = new SaleTransaction[1];
-
+        arraySaleTransaction[0] = new SaleTransaction();
         arraySaleTransaction[0].setTransactionType("sale");
         arraySaleTransaction[0].setCardNumber("4200000000000000");
         arraySaleTransaction[0].setCvv("123");

@@ -28,7 +28,7 @@ public class TransactionServices {
     }
 
     public Response createVoidTransaction(String referenceId){
-        return tsh.createVoidTransaction(referenceId);
+        return tsh.createVoidTransaction(referenceId, USER, PASSWORD);
     }
 
     public TransactionResponseInfo getResponseInfo(Response response){

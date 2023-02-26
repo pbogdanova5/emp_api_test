@@ -2,10 +2,7 @@ package com.emp.sanitycheck.tests;
 
 import com.emp.sanitycheck.helpers.TransactionDataProviders;
 import com.emp.sanitycheck.models.SaleTransaction;
-import com.emp.sanitycheck.models.TransactionResponseInfo;
 import io.restassured.response.Response;
-import org.apache.http.HttpStatus;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class SanityTests extends TestBase{
@@ -15,6 +12,7 @@ public class SanityTests extends TestBase{
             dataProviderClass = TransactionDataProviders.class,
             priority=1)
     public void testSaleTransaction(SaleTransaction stValues){
+
         //1 Send a valid payment transaction request
         Response response = transactionServices.createSaleTransaction(stValues);
         referenceID = transactionServices.getResponseInfo(response).getUniqueId();
